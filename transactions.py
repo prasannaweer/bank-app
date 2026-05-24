@@ -11,19 +11,21 @@ def deposit(account_id, amount):
     acc["history"].append(f"Deposit: +{amount}")
     print(f"Deposited {amount}. Balance: {acc['balance']}")
 
+OVERDRAFT_FEE = 25
 def withdraw(account_id, amount):
     acc = get_account(account_id)
-    if not acc:
-        print(f"Error: Account {account_id} not found.")
-        return
-        
     if acc["balance"] < amount:
-        print("Insufficient funds.")
+        # Allow overdraft but charge a fee
+        acc["balance"] -= (amount + OVERDRAFT_FEE)
+        acc["history"].append(
+            f"Withdrawal: -{amount} (overdraft fee: -{OVERDRAFT_FEE})"
+        )
+        print(f"Overdraft! Withdrew {amount} + fee {OVERDRAFT_FEE}. "f"Balance: {acc['balance']}")
         return
-        
     acc["balance"] -= amount
     acc["history"].append(f"Withdrawal: -{amount}")
     print(f"Withdrew {amount}. Balance: {acc['balance']}")
+
 
 def transfer(from_id, to_id, amount):
     src = get_account(from_id)
