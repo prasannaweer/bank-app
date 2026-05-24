@@ -9,5 +9,11 @@ def create_account(account_id, owner, balance=0):
  registry[account_id] = account
  print(f"Account {account_id} created for {owner}.")
  return account
+
+from datetime import datetime
 def get_account(account_id):
- return registry.get(account_id) # returns a REFERENCE, not a copy
+    acc = registry.get(account_id)
+    if acc:
+        acc["last_accessed"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return acc
+    
